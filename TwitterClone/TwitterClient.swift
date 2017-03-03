@@ -15,9 +15,15 @@ let consumerSecret = "LZMCfkCHbGDSfng1XLbP0dwq7DDLD0xhqebVVm5V1ofTOvmKfX"
 
 
 class TwitterClient: BDBOAuth1SessionManager {
-    static var sharedInstance = TwitterClient(baseURL: twitterBaseURL, consumerKey: consumerKey, consumerSecret: consumerSecret)
     
-    func getRequestToken(){
+    static var sharedInstance = TwitterClient(baseURL: twitterBaseURL, consumerKey: consumerKey, consumerSecret: consumerSecret)
+    var accessToken = ""
+    var loginSuccess: (() -> ())?
+    var loginFailure: ((Error) -> ())?
+    func getRequestToken(success: @escaping () -> (), failure: @escaping (Error) -> ()){
+        loginSuccess = success
+        loginFailure = failure
+        deauthorize()
         fetchRequestToken(withPath: "oauth/request_token", method: "POST", callbackURL: URL(string: "vulongtwitterclone://"), scope: nil, success: { (response: BDBOAuth1Credential?) in
             if let response = response {
                 let requestToken = response.token!
@@ -28,37 +34,60 @@ class TwitterClient: BDBOAuth1SessionManager {
             print("\(error?.localizedDescription)")
         })
     }
-    func getAccessToken(url: URL) -> Bool {
+    func getAccessToken(url: URL) {
         let requestToken = BDBOAuth1Credential(queryString: url.query)
-        var verified = false
+        var accessGranted = false
         fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (response: BDBOAuth1Credential?) in
             if let response = response {
                 print("Access token received \(response.token)")
-                verified = true
-                self.getCredentials()
-                print("HERE COMES THE TWEETS=============")
-                self.getTweet()
+                
+                self.getCredentials(success: { (user: User) -> () in
+                    User.currentUser = user
+                    self.loginSuccess?()
+                }, failure: {(error: Error) -> () in
+                    self.loginFailure?(error)
+                })
+                
+                self.accessToken = response.token
+                
+                accessGranted = true
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.displayHomeScreen()
+//                self.getCredentials()
+//                print("HERE COMES THE TWEETS=============")
+//                self.getTweet()
             }
         }, failure: { (error: Error?) in
             print("\(error.debugDescription)")
-            verified = false
+            
         })
-        return verified
     }
-    func getCredentials(){
+
+    func getCredentials(success: @escaping (User) -> (), failure: @escaping (Error) -> ()){
         get("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response:Any?) in
             if let response = response {
 //            print(response)
-                let user = response as! NSDictionary
-                print(user["name"] as! String)
-                print(user["screen_name"] as! String)
-                print(user["profile_image_url"] as! String)
+                let userDictionary = response as! NSDictionary
+                print(userDictionary["name"] as! String)
+                print(userDictionary["screen_name"] as! String)
+                print(userDictionary["profile_image_url"] as! String)
+                let user = User(dictionary: userDictionary)
+                
+                success(user)
             }
         }, failure: { (task: URLSessionDataTask?, error: Error) in
             print(error.localizedDescription)
+            failure(error)
         })
     }
-    func getTweet(){
+    
+    func logout(){
+        User.currentUser = nil
+        deauthorize()
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: User.userDidLogOutNotification), object: nil)
+    }
+    func getTweets(){
         get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) in
             if let response = response {
                 let tweets = response as! [NSDictionary]
