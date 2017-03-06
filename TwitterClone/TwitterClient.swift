@@ -17,7 +17,7 @@ let consumerSecret = "LZMCfkCHbGDSfng1XLbP0dwq7DDLD0xhqebVVm5V1ofTOvmKfX"
 class TwitterClient: BDBOAuth1SessionManager {
     
     static var sharedInstance = TwitterClient(baseURL: twitterBaseURL, consumerKey: consumerKey, consumerSecret: consumerSecret)
-    var accessToken = ""
+//    var accessToken = ""
     var loginSuccess: (() -> ())?
     var loginFailure: ((Error) -> ())?
     func getRequestToken(success: @escaping () -> (), failure: @escaping (Error) -> ()){
@@ -36,7 +36,6 @@ class TwitterClient: BDBOAuth1SessionManager {
     }
     func getAccessToken(url: URL) {
         let requestToken = BDBOAuth1Credential(queryString: url.query)
-        var accessGranted = false
         fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (response: BDBOAuth1Credential?) in
             if let response = response {
                 print("Access token received \(response.token)")
@@ -48,14 +47,10 @@ class TwitterClient: BDBOAuth1SessionManager {
                     self.loginFailure?(error)
                 })
                 
-                self.accessToken = response.token
+//                self.accessToken = response.token
                 
-                accessGranted = true
                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.displayHomeScreen()
-//                self.getCredentials()
-//                print("HERE COMES THE TWEETS=============")
-//                self.getTweet()
             }
         }, failure: { (error: Error?) in
             print("\(error.debugDescription)")
@@ -87,17 +82,36 @@ class TwitterClient: BDBOAuth1SessionManager {
         
         NotificationCenter.default.post(name: Notification.Name(rawValue: User.userDidLogOutNotification), object: nil)
     }
-    func getTweets(){
+    func getTweets(success: @escaping ([Tweet]) -> () ,failure: @escaping (Error) -> ()){
         get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) in
             if let response = response {
-                let tweets = response as! [NSDictionary]
-                
-                for tweet in tweets {
-                    print(tweet["text"] as! String)
-                }
+//                    print(response)
+                let tweets_dictionaries = response as! [NSDictionary]
+                let tweets = Tweet.tweetsWithArray(dictionaries: tweets_dictionaries)
+//                print(tweets)
+                success(tweets)
             }
         }, failure: { (task: URLSessionDataTask?, error: Error) in
             print(error.localizedDescription)
+            failure(error)
+        })
+    }
+
+    func postTweet(tweet: String!, success: @escaping (Tweet) -> () ,failure: @escaping (Error) -> ()){
+//        https://api.twitter.com/1.1/statuses/update.json
+        let endPointWithVar = "1.1/statuses/update.json?status=\(tweet!)"
+        print(endPointWithVar)
+        let urlString :String = endPointWithVar.replacingOccurrences(of: " ", with: "%20")
+        
+        print(urlString)
+        
+        post(urlString,parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) in
+            if let response = response {
+                print(response)
+            }
+        }, failure: { (task: URLSessionDataTask?, error: Error) in
+            print(error.localizedDescription)
+            failure(error)
         })
     }
 }
