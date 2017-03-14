@@ -31,7 +31,7 @@ class TweetViewCell: UITableViewCell {
         didSet {
             tweetLabel.text = tweet.text
             displayNameLabel.text = tweet.user?.name
-            accNameLabel.text = "@\(tweet.user?.screenname!)"
+            accNameLabel.text = tweet.user?.screenname
             timeAgoLabel.text = tweet.timeSince
             if (tweet.user?.profileUrl != nil) {
                 avatarImg.setImageWith((tweet.user?.profileUrl)!)

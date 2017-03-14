@@ -96,18 +96,23 @@ class TwitterClient: BDBOAuth1SessionManager {
             failure(error)
         })
     }
-
-    func postTweet(tweet: String!, success: @escaping (Tweet) -> () ,failure: @escaping (Error) -> ()){
+    
+    func postTweet(tweet: String!, success: @escaping (NSDictionary) -> () ,failure: @escaping (Error) -> ()){
 //        https://api.twitter.com/1.1/statuses/update.json
-        let endPointWithVar = "1.1/statuses/update.json?status=\(tweet!)"
+
+        let originalString = tweet!
+        let escapedString = originalString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        print(escapedString!)
+
+        let endPointWithVar = "1.1/statuses/update.json?status=\(escapedString!)"
         print(endPointWithVar)
-        let urlString :String = endPointWithVar.replacingOccurrences(of: " ", with: "%20")
+//        let urlString :String = endPointWithVar.replacingOccurrences(of: " ", with: "%20")
+
+//        print(urlString)
         
-        print(urlString)
-        
-        post(urlString,parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) in
+        post(endPointWithVar,parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) in
             if let response = response {
-                print(response)
+                success(response as! NSDictionary)
             }
         }, failure: { (task: URLSessionDataTask?, error: Error) in
             print(error.localizedDescription)

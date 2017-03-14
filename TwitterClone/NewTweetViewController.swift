@@ -8,7 +8,12 @@
 
 import UIKit
 
+protocol NewTweetViewControllerDelegate {
+    func addingNewTweet(newVC: NewTweetViewController, tweet: NSDictionary )
+}
 class NewTweetViewController: UIViewController {
+    var delegate: NewTweetViewControllerDelegate!
+    
     let limitLength = 140
     @IBOutlet weak var textView: UITextView!
     @IBAction func onEditingChanged(_ sender: UITextField) {
@@ -27,14 +32,19 @@ class NewTweetViewController: UIViewController {
     @IBAction func postTweet(_ sender: UIBarButtonItem) {
         let newTweet = tweetTtField.text
         if newTweet != "" {
-            TwitterClient.sharedInstance?.postTweet(tweet: newTweet, success: { (tweet: Tweet) in
-            
+            TwitterClient.sharedInstance?.postTweet(tweet: newTweet, success: { (response) in
+                self.delegate.addingNewTweet(newVC: self, tweet: response)
+                self.dismiss(animated: true, completion: nil)
             }, failure: { (error: Error) in
                 print("\(error.localizedDescription)")
             })
         }
     }
-    
+//    func tweeted(tweet: String){
+//        print("TWEET SENT TO SERVER ~~~~~~~~~~~~")
+//        delegate.addingNewTweet(newVC: self, tweet: tweet)
+//        dismiss(animated: true, completion: nil)
+//    }
     @IBAction func onCancel(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }

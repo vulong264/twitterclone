@@ -71,7 +71,7 @@ class HomeViewController: UIViewController {
 
 }
 
-extension HomeViewController: UITableViewDataSource, UITableViewDelegate{
+extension HomeViewController: UITableViewDataSource, UITableViewDelegate, NewTweetViewControllerDelegate{
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tweets == nil {
@@ -99,5 +99,18 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate{
             let nextVC = segue.destination as! TweetViewController
             nextVC.tweet = selectedTweet
         }
+
+        if(segue.identifier == "NewTweet"){
+            let nextVC = segue.destination as! NewTweetViewController
+            nextVC.delegate = self
+        }        
+    }
+    
+    func addingNewTweet(newVC: NewTweetViewController, tweet: NSDictionary) {
+        print("~~~~~~~~~~~~Posted new tweet: \(tweet)")
+
+        let newTweet = Tweet.init(dictionary: tweet)
+        self.tweets.insert(newTweet, at: 0)
+        self.tableView.reloadData()
     }
 }

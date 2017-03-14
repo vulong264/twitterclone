@@ -100,20 +100,45 @@
                                     <action selector="onEditingChanged:" destination="o9D-bR-AiT" eventType="editingChanged" id="vxN-Lb-Wep"/>
                                 </connections>
                             </textField>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M87-iB-jtM">
+                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                                <items>
+                                    <navigationItem title="New Tweet" id="U33-0j-RZy">
+                                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="lbu-bn-RBW">
+                                            <connections>
+                                                <action selector="onCancel:" destination="o9D-bR-AiT" id="WQO-GO-9uS"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <rightBarButtonItems>
+                                            <barButtonItem title="Post" id="vHb-PP-p5D">
+                                                <connections>
+                                                    <action selector="postTweet:" destination="o9D-bR-AiT" id="fIn-DG-hmc"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem title="140" id="sur-QJ-Ce9">
+                                                <color key="tintColor" red="0.60000002379999995" green="0.60000002379999995" blue="0.60000002379999995" alpha="1" colorSpace="calibratedRGB"/>
+                                            </barButtonItem>
+                                        </rightBarButtonItems>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="aUu-sL-Orc" secondAttribute="trailing" constant="8" id="2c2-H8-ylT"/>
+                            <constraint firstAttribute="trailing" secondItem="M87-iB-jtM" secondAttribute="trailing" id="5VU-w9-a9Y"/>
                             <constraint firstItem="cVD-Xv-rAJ" firstAttribute="leading" secondItem="4Ik-4f-lYh" secondAttribute="leading" constant="8" id="BDb-MK-VFw"/>
-                            <constraint firstItem="cVD-Xv-rAJ" firstAttribute="top" secondItem="s36-oE-LyV" secondAttribute="bottom" constant="8" id="GtO-8d-FEO"/>
                             <constraint firstItem="JKQ-aV-iAB" firstAttribute="top" secondItem="cVD-Xv-rAJ" secondAttribute="top" id="Ilj-qE-uIK"/>
+                            <constraint firstItem="cVD-Xv-rAJ" firstAttribute="top" secondItem="M87-iB-jtM" secondAttribute="bottom" constant="8" id="Ky3-jm-JZU"/>
                             <constraint firstItem="aUu-sL-Orc" firstAttribute="leading" secondItem="cVD-Xv-rAJ" secondAttribute="leading" id="MGM-js-LtR"/>
                             <constraint firstItem="si1-vD-h2r" firstAttribute="top" secondItem="JKQ-aV-iAB" secondAttribute="bottom" constant="8" id="Owl-BU-Mcd"/>
                             <constraint firstItem="JKQ-aV-iAB" firstAttribute="leading" secondItem="cVD-Xv-rAJ" secondAttribute="trailing" constant="8" id="TTm-ws-KuA"/>
+                            <constraint firstItem="M87-iB-jtM" firstAttribute="leading" secondItem="4Ik-4f-lYh" secondAttribute="leading" id="Wan-SJ-n9L"/>
                             <constraint firstItem="NDk-9g-61S" firstAttribute="top" secondItem="aUu-sL-Orc" secondAttribute="bottom" constant="8" id="Y3G-Hn-J10"/>
                             <constraint firstItem="NDk-9g-61S" firstAttribute="leading" secondItem="aUu-sL-Orc" secondAttribute="leading" id="fnY-og-J1i"/>
                             <constraint firstItem="si1-vD-h2r" firstAttribute="leading" secondItem="JKQ-aV-iAB" secondAttribute="leading" id="jdY-hb-1Qg"/>
                             <constraint firstAttribute="trailingMargin" secondItem="NDk-9g-61S" secondAttribute="trailing" id="l8e-mJ-WVF"/>
+                            <constraint firstItem="M87-iB-jtM" firstAttribute="top" secondItem="s36-oE-LyV" secondAttribute="bottom" id="rhk-Uo-4uQ"/>
                             <constraint firstItem="aUu-sL-Orc" firstAttribute="top" secondItem="cVD-Xv-rAJ" secondAttribute="bottom" constant="8" id="rx4-dt-mmv"/>
                         </constraints>
                     </view>
@@ -138,32 +163,14 @@
                         <outlet property="NameLabel" destination="JKQ-aV-iAB" id="PpU-JJ-q2d"/>
                         <outlet property="accountLabel" destination="si1-vD-h2r" id="VwG-dw-YC2"/>
                         <outlet property="avatarImg" destination="cVD-Xv-rAJ" id="ga2-wK-GU3"/>
-                        <outlet property="charCountLabel" destination="hkL-20-okg" id="pEC-H5-tcU"/>
+                        <outlet property="charCountLabel" destination="sur-QJ-Ce9" id="SQn-7P-BIs"/>
                         <outlet property="textView" destination="NDk-9g-61S" id="bgm-Jz-ukY"/>
                         <outlet property="tweetTtField" destination="aUu-sL-Orc" id="B6d-s7-ms5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qpC-Fs-ICp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4398.75" y="134.1549295774648"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="ymW-8X-guP">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kOt-Fl-juy" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fRh-1t-r9U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="o9D-bR-AiT" kind="relationship" relationship="rootViewController" id="dps-rD-82g"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NfZ-w0-eYc" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3600" y="135.21126760563379"/>
+            <point key="canvasLocation" x="3469" y="132"/>
         </scene>
         <!--Tweet-->
         <scene sceneID="pKA-Rf-my8">
@@ -348,7 +355,7 @@
                                         <rect key="frame" x="0.0" y="28" width="320" height="144"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9se-XA-Uus" id="sQy-A7-wb1">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="143"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="144"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iWx-h9-vm0">
@@ -480,7 +487,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="New" id="5eE-PR-zeQ">
                             <connections>
-                                <segue destination="kOt-Fl-juy" kind="presentation" identifier="NewTweet" id="Ted-f2-3Ho"/>
+                                <segue destination="o9D-bR-AiT" kind="presentation" identifier="NewTweet" id="mmg-AV-j1a"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

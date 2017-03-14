@@ -32,7 +32,7 @@ class TweetViewController: UIViewController {
             userAvatarImg.setImageWith((tweet?.user?.profileUrl)!)
         }
         screenNameLabel.text = tweet?.user?.name
-        accNameLabel.text = "@\(tweet?.user?.screenname!)"
+        accNameLabel.text = tweet?.user?.screenname
         tweetTextLabel.text = tweet?.text
         tweetCountLabel.text = "\(tweet?.retweet_count ?? 0)"
         tweetFavorLabel.text = "\(tweet?.favorite_count ?? 0)"
